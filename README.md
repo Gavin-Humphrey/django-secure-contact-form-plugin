@@ -190,28 +190,84 @@ button:hover {
 ## Usage
 1. **Render the Form:**
 
-To display the contact form, include the following view in your Django app:
+- To display the contact form, you have two options depending on your use case:
 
-````python
-from django.shortcuts import render
-from .forms import ContactForm
+    * **Standard Implementation:**
 
-def contact_form_view(request):
-    form = ContactForm()
-    return render(request, 'django_secure_contact_form/contact_form.html', {'form': form})
-````
+        If you are using the default ContactForm provided by the plugin and do not require any customization, you can directly import and use it as follows:
+
+        ````python
+        from django.shortcuts import render
+        from django_secure_contact_form.forms import ContactForm
+
+        def contact_form_view(request):
+            form = ContactForm()
+            return render(request, 'django_secure_contact_form/contact_form.html', {'form': form})
+        ````
+        In this case, you do not need to create a custom model or form file. The form will be handled entirely by the plugin.
+
+    * **Customized Form Implementation:**
+
+        If you need to customize the contact form, you can create a custom form that extends the ContactForm provided by the plugin. Here’s how:
+
+        Create a Custom Form Model:
+
+        First, create a model that inherits from ContactMessage, which is provided by the plugin:
+
+        ````python
+        from django.db import models
+        from django_secure_contact_form.models import ContactMessage
+
+        class CustomContactMessage(ContactMessage):
+            custom_field = models.CharField(max_length=100, blank=True, null=True)
+        ````
+        **Create a Custom Form:**
+
+        Then, create a custom form that extends ContactForm:
+
+        ````python
+        from django import forms
+        from .models import CustomContactMessage
+        from django_secure_contact_form.forms import ContactForm
+
+        class CustomContactForm(ContactForm):
+            custom_field = forms.CharField(required=False)
+
+            class Meta(ContactForm.Meta):
+                model = CustomContactMessage
+                fields = ContactForm.Meta.fields + ['custom_field']
+        ````
+        **Use the Customized Form:**
+
+        Finally, use your custom form in the view:
+
+        ````python
+        from django.shortcuts import render
+        from .forms import CustomContactForm
+
+        def contact_form_view(request):
+            form = CustomContactForm()
+            return render(request, 'django_secure_contact_form/contact_form.html', {'form': form})
+        ````
+        In this customized implementation, you should import your custom form from the appropriate module (e.g., .forms) and ensure your model inherits from ContactMessage.
+
+    **Summary**
+    Standard Implementation: Import ContactForm directly from django_secure_contact_form.forms for a plug-and-play solution.
+
+    Customized Implementation: Extend ContactForm and ContactMessage for additional fields or custom behavior.
+    
 2. **Handle Form Submission:**
 
-In your `urls.py`, map the view to a URL:
+    In your `urls.py`, map the view to a URL:
 
-````python
-from django.urls import path
-from .views import contact_form_view
+    ````python
+    from django.urls import path
+    from .views import contact_form_view
 
-urlpatterns = [
-    path('contact/', contact_form_view, name='contact_form'),
-]
-````
+    urlpatterns = [
+        path('contact/', contact_form_view, name='contact_form'),
+    ]
+    ````
 
 ## Testing
 

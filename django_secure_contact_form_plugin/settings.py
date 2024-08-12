@@ -123,6 +123,15 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_FROM = "film.junkiez01@gmail.com"
+EMAIL_HOST_USER = "film.junkiez01@gmail.com"
+EMAIL_HOST_PASSWORD = "ffmowgoxfmbqelmg"
+PASSWORD_RESET_TIMEOUT = 15000
 
 # configuration for django-simple-captcha
 CAPTCHA_IMAGE_SIZE = (110, 50) 
