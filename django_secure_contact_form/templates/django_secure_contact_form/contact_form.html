@@ -7,18 +7,27 @@
 </head>
 <body>
     <h1>Contact Us</h1>
+
+    <!-- 1. Display Backend / Email Dispatch Errors -->
+    {% if error_message %}
+        <div class="errors" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+            <p><strong>Error:</strong> {{ error_message }}</p>
+        </div>
+    {% endif %}
+
+    <!-- 2. Display Form Non-Field Errors -->
+    {% if form.non_field_errors %}
+        <div class="errors" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div> 
+    {% endif %}
+
     <form method="post" action="{% url 'contact' %}">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Send</button>
     </form>
-    {% if form.non_field_errors %}
-         <div class="errors">
-            {% for error in form.non_field_errors %}
-                <p>{{ error }}</p>
-            {% endfor %}
-        </div> 
-        
-    {% endif %}
 </body>
 </html>
